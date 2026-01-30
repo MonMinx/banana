@@ -1,36 +1,35 @@
-# NanoGen - AI Image Generator
+# NanoGen - AI 图像生成器
 
-NanoGen is a full-stack web application that mimics the functionality of NanoBanana Pro. It allows users to generate AI images, manage their profile, and purchase credits.
+NanoGen 是一个全栈 Web 应用程序，模仿了 NanoBanana Pro 的功能。它允许用户生成 AI 图像、管理个人资料和购买积分。
 
-## Features
+## 功能特性
 
--   **AI Image Generation**: Integrated with Nano Banana API (Mock/Proxy).
--   **User Management**: Sign up, Login (Mock), and Profile management.
--   **Credit System**: Pay-per-use model with mock payment integration.
--   **Responsive UI**: Modern, dark-themed interface built with Tailwind CSS.
+-   **AI 图像生成**: 集成 Nano Banana API（支持流式响应）。
+-   **用户管理**: 注册、登录（演示版）和个人中心管理。
+-   **积分系统**: 按次付费模式，集成模拟支付功能。
+-   **响应式 UI**: 基于 Tailwind CSS 构建的现代深色主题界面，高度还原设计图。
 
-## Quick Links
+## 快速链接
 
--   [Installation Guide (For Beginners)](./INSTALL.md)
--   [User Manual](./USAGE.md)
+-   [安装指南 (初学者适用)](./INSTALL.md)
+-   [用户手册](./USAGE.md)
 
-## Tech Stack
+## 技术栈
 
--   **Frontend**: Next.js 16 (React), Tailwind CSS
--   **Backend**: Next.js API Routes
--   **Database**: SQLite with Prisma ORM
--   **Language**: TypeScript
+-   **前端**: Next.js 16 (React), Tailwind CSS
+-   **后端**: Next.js API Routes
+-   **数据库**: SQLite with Prisma ORM
+-   **语言**: TypeScript
 
-## Project Structure
+## 项目结构
 
--   `app/`: Main application code (Pages, API routes, Components).
--   `prisma/`: Database schema and configuration.
--   `scripts/`: Utility scripts for testing.
+-   `app/`: 主要应用程序代码（页面、API 路由、组件）。
+-   `prisma/`: 数据库架构和配置。
 
-## Getting Started
+## 快速开始
 
 1.  `npm install`
 2.  `npx prisma migrate dev --name init`
 3.  `npm run dev`
 
-See `INSTALL.md` for detailed instructions.
+详细说明请参阅 `INSTALL.md`。

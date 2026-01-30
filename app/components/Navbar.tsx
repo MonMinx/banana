@@ -48,20 +48,20 @@ export default function Navbar() {
                   href="/"
                   className={`px-3 py-2 rounded-md text-sm font-medium ${pathname === '/' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                 >
-                  Generate
+                  生成
                 </Link>
                 <Link
                   href="/pricing"
                   className={`px-3 py-2 rounded-md text-sm font-medium ${pathname === '/pricing' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                 >
-                  Pricing
+                  价格
                 </Link>
                 {user && (
                   <Link
                     href="/profile"
                     className={`px-3 py-2 rounded-md text-sm font-medium ${pathname === '/profile' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                   >
-                    Profile
+                    个人中心
                   </Link>
                 )}
               </div>
@@ -71,15 +71,15 @@ export default function Navbar() {
             <div className="ml-4 flex items-center md:ml-6">
               {user ? (
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-yellow-400 font-medium">{user.credits} Credits</span>
+                  <span className="text-sm text-yellow-400 font-medium">{user.credits} 积分</span>
                   <span className="text-sm text-gray-400">{user.email}</span>
                   <button onClick={logout} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
-                    Logout
+                    退出
                   </button>
                 </div>
               ) : (
                 <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium">
-                  Login
+                  登录
                 </Link>
               )}
             </div>

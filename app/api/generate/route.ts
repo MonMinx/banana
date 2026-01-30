@@ -3,10 +3,25 @@ import { NextResponse } from 'next/server';
 
 const API_HOST = 'https://grsaiapi.com';
 
+function getDimensions(ratio: string): { width: number, height: number } {
+  // Base size ~1024x1024 area
+  switch (ratio) {
+    case '1:1': return { width: 1024, height: 1024 };
+    case '2:3': return { width: 832, height: 1216 };
+    case '3:4': return { width: 896, height: 1152 };
+    case '9:16': return { width: 576, height: 1024 };
+    case '21:9': return { width: 1536, height: 640 };
+    case '3:2': return { width: 1216, height: 832 };
+    case '4:3': return { width: 1152, height: 896 };
+    case '16:9': return { width: 1024, height: 576 };
+    default: return { width: 1024, height: 1024 };
+  }
+}
+
 export async function POST(request: Request) {
   const API_KEY = process.env.NANO_API_KEY;
   try {
-    const { userId, prompt, imageBase64 } = await request.json();
+    const { userId, prompt, imageBase64, aspectRatio } = await request.json();
 
     if (!userId || !prompt) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -21,9 +36,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
     }
 
+    const { width, height } = getDimensions(aspectRatio || '1:1');
+
     const payload: any = {
       prompt: prompt,
-      model: "nano-banana"
+      model: "nano-banana",
+      width,
+      height
     };
 
     if (imageBase64) {

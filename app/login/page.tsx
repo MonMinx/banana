@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -26,11 +25,11 @@ export default function LoginPage() {
         window.dispatchEvent(new Event('user-update'));
         router.push('/');
       } else {
-        alert('Login failed');
+        alert('登录失败');
       }
     } catch (error) {
       console.error(error);
-      alert('An error occurred');
+      alert('发生错误');
     } finally {
       setLoading(false);
     }
@@ -39,17 +38,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
       <div className="bg-gray-900 p-8 rounded-lg shadow-xl w-full max-w-md border border-gray-800">
-        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">Welcome to NanoGen</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">欢迎来到 NanoGen</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">邮箱地址</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded focus:ring-2 focus:ring-yellow-500 focus:outline-none text-white"
-              placeholder="Enter your email"
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded focus:ring-2 focus:ring-yellow-500 focus:outline-none text-white placeholder-gray-500"
+              placeholder="请输入您的邮箱"
             />
           </div>
           <button
@@ -57,11 +56,11 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded transition disabled:opacity-50"
           >
-            {loading ? 'Logging in...' : 'Sign In / Register'}
+            {loading ? '登录中...' : '登录 / 注册'}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-500">
-          (This is a mock login. Just enter any email.)
+          (这是一个演示登录，请输入任意邮箱)
         </p>
       </div>
     </div>

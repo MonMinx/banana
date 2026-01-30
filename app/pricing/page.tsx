@@ -18,7 +18,7 @@ export default function PricingPage() {
       return;
     }
 
-    if (!confirm(`Confirm purchase of ${credits} credits for $${amount}?`)) return;
+    if (!confirm(`确认支付 $${amount} 购买 ${credits} 积分?`)) return;
 
     try {
       const res = await fetch('/api/payment', {
@@ -32,7 +32,7 @@ export default function PricingPage() {
       });
 
       if (res.ok) {
-        alert('Payment successful! Credits added.');
+        alert('支付成功! 积分已到账。');
         // Update user credits
         fetch(`/api/user?userId=${user.id}`)
           .then(r => r.json())
@@ -44,18 +44,18 @@ export default function PricingPage() {
              }
           });
       } else {
-        alert('Payment failed.');
+        alert('支付失败。');
       }
     } catch (e) {
       console.error(e);
-      alert('Error processing payment');
+      alert('支付处理错误');
     }
   };
 
   const tiers = [
-    { name: 'Starter', price: 5, credits: 50, features: ['50 Generations', 'Standard Speed', 'Basic Support'] },
-    { name: 'Pro', price: 15, credits: 200, features: ['200 Generations', 'Fast Speed', 'Priority Support'] },
-    { name: 'Ultimate', price: 50, credits: 800, features: ['800 Generations', 'Max Speed', '24/7 Support'] },
+    { name: '入门版', price: 5, credits: 50, features: ['50 次生成', '标准速度', '基础支持'] },
+    { name: '专业版', price: 15, credits: 200, features: ['200 次生成', '快速通道', '优先支持'] },
+    { name: '终极版', price: 50, credits: 800, features: ['800 次生成', '极速通道', '24/7 支持'] },
   ];
 
   return (
@@ -64,8 +64,8 @@ export default function PricingPage() {
 
       <main className="flex-grow container mx-auto px-4 py-12">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">Simple Pricing</h1>
-          <p className="text-gray-400">Choose the plan that fits your needs.</p>
+          <h1 className="text-4xl font-bold mb-4">简单定价</h1>
+          <p className="text-gray-400">选择适合您的套餐。</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -74,7 +74,7 @@ export default function PricingPage() {
               <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
               <div className="flex items-baseline mb-6">
                 <span className="text-4xl font-bold text-yellow-400">${tier.price}</span>
-                <span className="text-gray-500 ml-2">/one-time</span>
+                <span className="text-gray-500 ml-2">/一次性</span>
               </div>
               <ul className="space-y-4 mb-8">
                 {tier.features.map((feature, i) => (
@@ -90,7 +90,7 @@ export default function PricingPage() {
                 onClick={() => handlePurchase(tier.price, tier.credits)}
                 className="w-full bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-bold py-3 px-4 rounded-lg transition border border-gray-700 hover:border-yellow-500"
               >
-                Choose {tier.name}
+                选择 {tier.name}
               </button>
             </div>
           ))}

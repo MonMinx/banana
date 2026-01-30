@@ -1,43 +1,43 @@
-# User Manual for NanoGen
+# NanoGen 用户手册
 
-## Getting Started
+## 快速开始
 
-1.  **Open the Website**: Navigate to the homepage (e.g., `http://localhost:3000`).
-2.  **Navigation**: The top bar allows you to switch between the Generator, Pricing, and Profile pages.
+1.  **打开网站**: 访问首页（例如 `http://localhost:3000`）。
+2.  **导航**: 左侧侧边栏允许您在不同的工具和设置之间切换。
 
-## Features
+## 功能介绍
 
-### 1. Authentication (Login)
--   Click the "Login" button in the top right.
--   **Note**: This is a mock login system for demonstration.
--   Enter **any email address** (e.g., `test@example.com`) to sign in.
--   If the email hasn't been used before, a new account is automatically created with **5 free credits**.
+### 1. 认证 (登录)
+-   由于这是演示版，系统可能会自动为您创建一个演示账户。
+-   如果需要，您可以访问 `/login` 页面输入任意邮箱进行登录。
+-   新账户将自动获得 **5 积分**。
 
-### 2. Generating Images
--   Go to the **Generate** page (Home).
--   **Prompt**: Type a description of the image you want (e.g., "A futuristic cyberpunk city with neon lights").
--   **Generate**: Click the "Generate Image" button.
-    -   Cost: 1 Credit per image.
-    -   Time: It usually takes about 10-20 seconds.
--   **Result**: The image will appear below. You can click "Download High Res" to save it.
+### 2. 生成图片
+-   **控制面板**: 位于屏幕左侧。
+-   **提示词**: 在文本框中输入您想要生成的图片描述（例如 "赛博朋克风格的未来城市"）。
+-   **出图比例**: 选择图片的宽高比（如 1:1, 16:9 等）。
+-   **设置**: 您可以调整生成数量和分辨率。
+-   **生成**: 点击底部黄色的发送按钮。
+    -   消耗: 每张图片 1 积分。
+    -   时间: 通常需要 10-20 秒。
+-   **结果**: 生成的图片将显示在右侧的主画廊区域。您可以点击图片上的“下载”按钮保存。
 
-### 3. Buying Credits
--   Go to the **Pricing** page.
--   You will see three tiers: Starter ($5), Pro ($15), and Ultimate ($50).
--   Click "Choose Plan" to simulate a purchase.
--   Confirm the popup dialogue.
--   Your credits will be instantly added to your account.
+### 3. 购买积分
+-   点击左侧边栏的“价格”图标或访问 `/pricing` 页面。
+-   您将看到三个套餐：入门版 ($5)、专业版 ($15) 和 终极版 ($50)。
+-   点击“选择”按钮模拟购买流程。
+-   确认后，积分将立即添加到您的账户。
 
-### 4. User Profile
--   Click "Profile" in the navigation bar.
--   **Overview**: View your Email, Current Credits, and Role.
--   **History**: See a gallery of your previously generated images.
--   **Transactions**: View a log of your credit purchases (Mock payments).
+### 4. 个人中心
+-   点击左侧边栏的头像或访问 `/profile` 页面。
+-   **概览**: 查看您的邮箱、当前积分和角色。
+-   **历史记录**: 查看您之前生成的所有图片。
+-   **交易记录**: 查看您的积分购买记录。
 
-## Admin / Advanced
+## 管理员 / 高级
 
--   **Database**: The data is stored in `dev.db`. You can view it using a tool like "DB Browser for SQLite" or using Prisma Studio:
+-   **数据库**: 数据存储在 `dev.db` 文件中。您可以使用 SQLite 浏览器查看，或使用 Prisma Studio：
     ```bash
     npx prisma studio
     ```
-    This opens a web interface to manage users and view raw data.
+    这将打开一个网页界面来管理用户和查看原始数据。

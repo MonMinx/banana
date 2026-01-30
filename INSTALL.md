@@ -1,79 +1,79 @@
-# Installation Guide for NanoGen
+# NanoGen 安装指南
 
-Welcome to NanoGen! This guide will help you set up the website on your computer or server. It is designed for complete beginners.
+欢迎使用 NanoGen！本指南将帮助您在计算机或服务器上安装和设置本网站。本指南专为初学者设计。
 
-## Prerequisites
+## 前置条件
 
-Before you start, you need to have the following installed on your computer:
+在开始之前，您需要在计算机上安装以下软件：
 
-1.  **Node.js**: This is the environment that runs the website.
-    -   Download and install the "LTS" version from [nodejs.org](https://nodejs.org/).
-2.  **Git**: (Optional) To download the code if you haven't already.
-    -   Download from [git-scm.com](https://git-scm.com/).
+1.  **Node.js**: 这是运行网站的环境。
+    -   请从 [nodejs.org](https://nodejs.org/) 下载并安装 "LTS" 版本。
+2.  **Git**: (可选) 用于下载代码。
+    -   请从 [git-scm.com](https://git-scm.com/) 下载。
 
-## Step 1: Download the Project
+## 第一步：下载项目
 
-If you have the project folder already, open your terminal (Command Prompt on Windows, Terminal on Mac/Linux) and navigate to the project folder:
+如果您已经有了项目文件夹，请打开终端（Windows 上的命令提示符，Mac/Linux 上的终端）并导航到项目文件夹：
 
 ```bash
-cd path/to/project
+cd 项目文件夹路径
 ```
 
-## Step 2: Install Dependencies
+## 第二步：安装依赖
 
-Run the following command to install all the necessary libraries. This might take a few minutes.
+运行以下命令安装所有必要的库。这可能需要几分钟。
 
 ```bash
 npm install
 ```
 
-## Step 3: Configure the Database
+## 第三步：配置数据库
 
-This project uses a local SQLite database, so you don't need to install any external database software.
+本项目使用本地 SQLite 数据库，因此无需安装任何外部数据库软件。
 
-1.  **Create the Environment File**:
-    Create a file named `.env` in the root folder (where `package.json` is).
-    Add the following line to it:
+1.  **创建环境文件**:
+    在根文件夹（`package.json` 所在的文件夹）中创建一个名为 `.env` 的文件。
+    将以下内容添加到其中：
 
     ```env
     DATABASE_URL="file:./dev.db"
     NANO_API_KEY="sk-5bcff1f3bfd34e7788d1210688f9a38f"
     ```
-    *(Note: Replace the API key if you have your own)*
+    *(注意：如果您有自己的 API 密钥，请替换它)*
 
-2.  **Set up the Database Tables**:
-    Run this command to create the database file (`dev.db`) and set up the tables:
+2.  **设置数据库表**:
+    运行此命令以创建数据库文件 (`dev.db`) 并设置表结构：
 
     ```bash
     npx prisma migrate dev --name init
     ```
 
-    You should see a message saying "Your database is now in sync with your schema."
+    您应该会看到一条消息，说明数据库现在与架构同步。
 
-## Step 4: Run the Application
+## 第四步：运行应用程序
 
-Now you are ready to start the website!
+现在您可以启动网站了！
 
-1.  **Start the development server**:
+1.  **启动开发服务器**:
 
     ```bash
     npm run dev
     ```
 
-2.  **Open your browser**:
-    Go to `http://localhost:3000`.
+2.  **打开浏览器**:
+    访问 `http://localhost:3000`。
 
-    You should see the NanoGen homepage!
+    您应该能看到 NanoGen 首页！
 
-## Troubleshooting
+## 故障排除
 
--   **"Command not found"**: Make sure Node.js is installed and you restarted your terminal.
--   **Database errors**: Try deleting the `dev.db` file and running `npx prisma migrate dev --name init` again.
--   **Port in use**: If port 3000 is taken, the app will try 3001. Check the terminal output.
+-   **"Command not found" (找不到命令)**: 确保已安装 Node.js 并重新启动了终端。
+-   **数据库错误**: 尝试删除 `dev.db` 文件，然后再次运行 `npx prisma migrate dev --name init`。
+-   **端口被占用**: 如果端口 3000 被占用，应用程序将尝试 3001。请查看终端输出。
 
-## Building for Production
+## 生产环境构建
 
-If you want to run this on a public server:
+如果您想在公共服务器上运行此程序：
 
-1.  Run `npm run build`
-2.  Run `npm start`
+1.  运行 `npm run build`
+2.  运行 `npm start`
