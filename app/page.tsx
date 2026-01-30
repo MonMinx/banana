@@ -8,28 +8,17 @@ type AspectRatio = '1:1' | '2:3' | '3:4' | '9:16' | '21:9' | '3:2' | '4:3' | '16
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('16:9');
+  const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('AI绘图');
 
   useEffect(() => {
-    // Mock user login for now if not present
+    // Check for stored user
     const u = localStorage.getItem('user');
     if (u) {
         setUser(JSON.parse(u));
-    } else {
-        // Auto-login for demo purposes since we removed the dedicated login page flow from the main UI
-        // In a real app, we would redirect or show a modal.
-        fetch('/api/auth', {
-            method: 'POST',
-            body: JSON.stringify({ email: 'demo@nanogen.com' })
-        })
-        .then(res => res.json())
-        .then(data => {
-            localStorage.setItem('user', JSON.stringify(data.user));
-            setUser(data.user);
-        });
     }
   }, []);
 
@@ -52,7 +41,8 @@ export default function Home() {
         body: JSON.stringify({
           userId: user.id,
           prompt: prompt,
-          aspectRatio: aspectRatio
+          aspectRatio: aspectRatio,
+          imageBase64: referenceImage // Pass the base64 image
         })
       });
 
@@ -68,6 +58,7 @@ export default function Home() {
                 if(d.user) {
                     localStorage.setItem('user', JSON.stringify(d.user));
                     setUser(d.user);
+                    window.dispatchEvent(new Event('user-update'));
                 }
              });
 
@@ -93,6 +84,8 @@ export default function Home() {
         setPrompt={setPrompt}
         aspectRatio={aspectRatio}
         setAspectRatio={setAspectRatio}
+        referenceImage={referenceImage}
+        setReferenceImage={setReferenceImage}
         onGenerate={handleGenerate}
         generating={generating}
       />
@@ -113,7 +106,7 @@ export default function Home() {
         </div>
 
         {/* Gallery / Results */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
            {results.length === 0 ? (
                <div className="flex flex-col items-center justify-center h-full text-gray-600">
                    <div className="text-xs mb-4">-已经到底了-</div>

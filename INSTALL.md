@@ -37,9 +37,9 @@ npm install
 
     ```env
     DATABASE_URL="file:./dev.db"
-    NANO_API_KEY="sk-5bcff1f3bfd34e7788d1210688f9a38f"
+    NANO_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     ```
-    *(注意：如果您有自己的 API 密钥，请替换它)*
+    *(注意：请将上面的 API 密钥替换为您自己的密钥)*
 
 2.  **设置数据库表**:
     运行此命令以创建数据库文件 (`dev.db`) 并设置表结构：

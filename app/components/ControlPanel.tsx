@@ -1,9 +1,11 @@
 'use client';
 import {
   ChevronRightIcon,
-  PhotoIcon
+  PhotoIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { PaperAirplaneIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { useRef } from 'react';
 
 type AspectRatio = '1:1' | '2:3' | '3:4' | '9:16' | '21:9' | '3:2' | '4:3' | '16:9';
 
@@ -12,6 +14,8 @@ interface ControlPanelProps {
   setPrompt: (s: string) => void;
   aspectRatio: AspectRatio;
   setAspectRatio: (r: AspectRatio) => void;
+  referenceImage: string | null;
+  setReferenceImage: (img: string | null) => void;
   onGenerate: () => void;
   generating: boolean;
 }
@@ -21,11 +25,37 @@ export default function ControlPanel({
   setPrompt,
   aspectRatio,
   setAspectRatio,
+  referenceImage,
+  setReferenceImage,
   onGenerate,
   generating
 }: ControlPanelProps) {
 
   const ratios: AspectRatio[] = ['1:1', '2:3', '3:4', '9:16', '21:9', '3:2', '4:3', '16:9'];
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReferenceImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReferenceImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="w-[340px] bg-[#1a1a1a] border-r border-gray-800 flex flex-col h-screen text-gray-300 flex-shrink-0">
@@ -36,7 +66,10 @@ export default function ControlPanel({
           <span className="bg-gray-800 p-1 rounded"><PhotoIcon className="w-4 h-4"/></span>
           图片生成
         </h2>
-        <div className="text-yellow-400 text-sm flex items-center cursor-pointer hover:text-yellow-300">
+        <div
+            className="text-yellow-400 text-sm flex items-center cursor-pointer hover:text-yellow-300 transition-colors"
+            onClick={() => alert('工具集页面正在开发中')}
+        >
           工具集 <ChevronRightIcon className="w-3 h-3 ml-1"/>
         </div>
       </div>
@@ -63,7 +96,7 @@ export default function ControlPanel({
                value={prompt}
                onChange={(e) => setPrompt(e.target.value)}
              />
-             <div className="absolute bottom-2 right-2 text-gray-600 text-xs">0/2000</div>
+             <div className="absolute bottom-2 right-2 text-gray-600 text-xs">{prompt.length}/2000</div>
            </div>
         </div>
 
@@ -122,19 +155,48 @@ export default function ControlPanel({
         {/* Reference Image */}
         <div className="space-y-2">
            <div className="text-xs text-gray-400">参考图 (0/6)</div>
-           <div className="h-24 border border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 cursor-pointer bg-[#0f0f0f] transition-colors">
-              <span className="text-xl font-light">+</span>
-              <span className="text-xs mt-1">点击或拖拽文件到此处</span>
-              <div className="flex gap-2 mt-2">
-                 {/* Icons for paste/image would go here */}
-              </div>
+           <div
+             className="h-24 border border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 cursor-pointer bg-[#0f0f0f] transition-colors relative overflow-hidden group"
+             onClick={() => fileInputRef.current?.click()}
+             onDragOver={(e) => e.preventDefault()}
+             onDrop={handleDrop}
+           >
+              {referenceImage ? (
+                <>
+                  <img src={referenceImage} alt="Reference" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                     <span className="text-xs text-white">点击更换</span>
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setReferenceImage(null); }}
+                    className="absolute top-1 right-1 bg-black bg-opacity-50 rounded-full p-1 hover:bg-red-500 text-white"
+                  >
+                    <XMarkIcon className="w-3 h-3"/>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="text-xl font-light">+</span>
+                  <span className="text-xs mt-1">点击或拖拽文件到此处</span>
+                </>
+              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
            </div>
         </div>
 
         {/* Style Model */}
         <div className="space-y-2">
            <div className="text-xs text-gray-400">风格模型</div>
-           <div className="h-16 border border-gray-700 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 cursor-pointer bg-[#2a2a2a] transition-colors">
+           <div
+             className="h-16 border border-gray-700 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 cursor-pointer bg-[#2a2a2a] transition-colors"
+             onClick={() => alert('模型选择即将上线')}
+           >
               <span className="text-xl font-light">+</span>
               <span className="text-[10px] mt-1 text-gray-600">暂未选择自定义模型</span>
            </div>

@@ -1,5 +1,5 @@
 'use client';
-import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -27,16 +27,16 @@ export default function ProfilePage() {
       .finally(() => setLoading(false));
   }, [router]);
 
-  if (loading) return <div className="min-h-screen bg-gray-950 text-white flex justify-center items-center">加载中...</div>;
-  if (!profile) return <div className="min-h-screen bg-gray-950 text-white flex justify-center items-center">用户未找到</div>;
+  if (loading) return <div className="flex h-screen bg-black text-white items-center justify-center">加载中...</div>;
+  if (!profile) return <div className="flex h-screen bg-black text-white items-center justify-center">用户未找到</div>;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      <Navbar />
+    <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
+      <Sidebar />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 mb-8">
+      <main className="flex-1 overflow-y-auto bg-black p-8">
+        <div className="max-w-5xl mx-auto py-12">
+          <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-8 mb-8">
             <h1 className="text-3xl font-bold mb-6">个人中心</h1>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -59,7 +59,7 @@ export default function ProfilePage() {
             {profile.generations && profile.generations.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {profile.generations.map((gen: any) => (
-                  <div key={gen.id} className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden group relative">
+                  <div key={gen.id} className="bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden group relative">
                     {gen.status === 'completed' && gen.imageUrl && gen.imageUrl.startsWith('http') ? (
                        <img src={gen.imageUrl} alt={gen.prompt} className="w-full h-48 object-cover" />
                     ) : (
@@ -97,7 +97,7 @@ export default function ProfilePage() {
                   </thead>
                   <tbody>
                     {profile.transactions.map((tx: any) => (
-                      <tr key={tx.id} className="border-b border-gray-800 hover:bg-gray-900">
+                      <tr key={tx.id} className="border-b border-gray-800 hover:bg-[#2a2a2a]">
                         <td className="p-4">{new Date(tx.createdAt).toLocaleDateString()}</td>
                          <td className="p-4 capitalize">{tx.type === 'recharge' ? '充值' : tx.type}</td>
                         <td className="p-4 text-green-400">+{tx.credits}</td>

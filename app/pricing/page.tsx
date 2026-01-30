@@ -1,5 +1,5 @@
 'use client';
-import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -59,41 +59,43 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      <Navbar />
+    <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
+      <Sidebar />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">简单定价</h1>
-          <p className="text-gray-400">选择适合您的套餐。</p>
-        </div>
+      <main className="flex-1 overflow-y-auto bg-black p-8">
+        <div className="max-w-5xl mx-auto py-12">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold mb-4">简单定价</h1>
+            <p className="text-gray-400">选择适合您的套餐。</p>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {tiers.map((tier) => (
-            <div key={tier.name} className="bg-gray-900 border border-gray-800 rounded-xl p-8 hover:border-yellow-500 transition duration-300">
-              <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
-              <div className="flex items-baseline mb-6">
-                <span className="text-4xl font-bold text-yellow-400">${tier.price}</span>
-                <span className="text-gray-500 ml-2">/一次性</span>
+          <div className="grid md:grid-cols-3 gap-8">
+            {tiers.map((tier) => (
+              <div key={tier.name} className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-8 hover:border-yellow-500 transition duration-300">
+                <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+                <div className="flex items-baseline mb-6">
+                  <span className="text-4xl font-bold text-yellow-400">${tier.price}</span>
+                  <span className="text-gray-500 ml-2">/一次性</span>
+                </div>
+                <ul className="space-y-4 mb-8">
+                  {tier.features.map((feature, i) => (
+                    <li key={i} className="flex items-center text-gray-300">
+                      <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => handlePurchase(tier.price, tier.credits)}
+                  className="w-full bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-bold py-3 px-4 rounded-lg transition border border-gray-700 hover:border-yellow-500"
+                >
+                  选择 {tier.name}
+                </button>
               </div>
-              <ul className="space-y-4 mb-8">
-                {tier.features.map((feature, i) => (
-                  <li key={i} className="flex items-center text-gray-300">
-                    <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => handlePurchase(tier.price, tier.credits)}
-                className="w-full bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-bold py-3 px-4 rounded-lg transition border border-gray-700 hover:border-yellow-500"
-              >
-                选择 {tier.name}
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </main>
     </div>

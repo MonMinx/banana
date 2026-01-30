@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -15,7 +16,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, password })
       });
 
       if (res.ok) {
@@ -49,6 +50,17 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded focus:ring-2 focus:ring-yellow-500 focus:outline-none text-white placeholder-gray-500"
               placeholder="请输入您的邮箱"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">密码</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded focus:ring-2 focus:ring-yellow-500 focus:outline-none text-white placeholder-gray-500"
+              placeholder="请输入密码 (自动注册)"
             />
           </div>
           <button

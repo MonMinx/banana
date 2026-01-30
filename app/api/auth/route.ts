@@ -5,11 +5,8 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // Mock Login: In a real app, we would verify WeChat code or password
-    // For this MVP, we just find or create the user based on email
-
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
     }
 
     let user = await prisma.user.findUnique({
@@ -21,10 +18,24 @@ export async function POST(request: Request) {
       user = await prisma.user.create({
         data: {
           email,
+          password, // Note: In a real production app, passwords must be hashed (e.g., bcrypt)
           role: 'user',
           credits: 5, // Free credits for new users
         },
       });
+    } else {
+        // Simple password check for demo purposes
+        if (user.password && user.password !== password) {
+            return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+        }
+
+        // If legacy user without password, update it
+        if (!user.password) {
+             await prisma.user.update({
+                 where: { id: user.id },
+                 data: { password }
+             });
+        }
     }
 
     // Return simple user info (mock session)
