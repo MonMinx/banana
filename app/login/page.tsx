@@ -21,10 +21,14 @@ export default function LoginPage() {
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.setItem('user', JSON.stringify(data.user));
-        // Dispatch custom event to update Navbar
-        window.dispatchEvent(new Event('user-update'));
-        router.push('/');
+        if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+            // Dispatch custom event to update Navbar
+            window.dispatchEvent(new Event('user-update'));
+            router.push('/');
+        } else {
+            alert('登录异常：未返回用户信息');
+        }
       } else {
         alert('登录失败');
       }

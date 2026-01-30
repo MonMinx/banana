@@ -20,12 +20,21 @@ export default function Sidebar() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    const safeParse = (str: string | null) => {
+      if (!str || str === 'undefined') return null;
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        return null;
+      }
+    };
+
     const u = localStorage.getItem('user');
-    if (u) setUser(JSON.parse(u));
+    setUser(safeParse(u));
 
     const handleStorage = () => {
       const u = localStorage.getItem('user');
-      setUser(u ? JSON.parse(u) : null);
+      setUser(safeParse(u));
     };
     window.addEventListener('user-update', handleStorage);
     return () => window.removeEventListener('user-update', handleStorage);

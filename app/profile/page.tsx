@@ -10,11 +10,18 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const u = localStorage.getItem('user');
-    if (!u) {
+    if (!u || u === 'undefined') {
       router.push('/login');
       return;
     }
-    const user = JSON.parse(u);
+
+    let user;
+    try {
+        user = JSON.parse(u);
+    } catch(e) {
+        router.push('/login');
+        return;
+    }
 
     fetch(`/api/user?userId=${user.id}`)
       .then(res => res.json())

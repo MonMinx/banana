@@ -9,7 +9,11 @@ export default function PricingPage() {
 
   useEffect(() => {
     const u = localStorage.getItem('user');
-    if (u) setUser(JSON.parse(u));
+    if (u && u !== 'undefined') {
+        try {
+            setUser(JSON.parse(u));
+        } catch (e) { console.error(e); }
+    }
   }, []);
 
   const handlePurchase = async (amount: number, credits: number) => {

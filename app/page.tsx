@@ -17,8 +17,12 @@ export default function Home() {
   useEffect(() => {
     // Check for stored user
     const u = localStorage.getItem('user');
-    if (u) {
-        setUser(JSON.parse(u));
+    if (u && u !== 'undefined') {
+        try {
+            setUser(JSON.parse(u));
+        } catch(e) {
+            console.error("Failed to parse user", e);
+        }
     }
   }, []);
 
