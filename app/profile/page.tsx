@@ -9,24 +9,23 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
-    const u = localStorage.getItem('user');
-    if (!u || u === 'undefined') {
-      router.push('/login');
-      return;
-    }
-
-    let user;
-    try {
-        user = JSON.parse(u);
-    } catch(e) {
-        router.push('/login');
-        return;
-    }
-
-    fetch(`/api/user?userId=${user.id}`)
-      .then(res => res.json())
+    fetch('/api/auth/me')
+      .then(res => {
+          if (res.status === 401) {
+              router.push('/login');
+              throw new Error('Unauthorized');
+          }
+          return res.json();
+      })
       .then(data => {
-        if (data.user) {
+          if (data.user) {
+              // Now fetch full profile with generations
+              return fetch(`/api/user?userId=${data.user.id}`);
+          }
+      })
+      .then(res => res && res.json())
+      .then(data => {
+        if (data && data.user) {
           setProfile(data.user);
         }
       })

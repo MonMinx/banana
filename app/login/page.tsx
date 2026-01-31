@@ -22,8 +22,7 @@ export default function LoginPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.user) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-            // Dispatch custom event to update Navbar
+            // Success - cookie is set by server
             window.dispatchEvent(new Event('user-update'));
             router.push('/');
         } else {

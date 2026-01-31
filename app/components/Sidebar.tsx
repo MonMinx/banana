@@ -21,24 +21,27 @@ export default function Sidebar() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const safeParse = (str: string | null) => {
-      if (!str || str === 'undefined') return null;
-      try {
-        return JSON.parse(str);
-      } catch (e) {
-        return null;
-      }
-    };
+    // Fetch user from secure session instead of localStorage
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => setUser(null));
 
-    const u = localStorage.getItem('user');
-    setUser(safeParse(u));
-
-    const handleStorage = () => {
-      const u = localStorage.getItem('user');
-      setUser(safeParse(u));
+    // Listen for updates (e.g. login, credit change)
+    const handleUpdate = () => {
+       fetch('/api/auth/me')
+         .then(res => res.json())
+         .then(data => setUser(data.user || null))
+         .catch(() => setUser(null));
     };
-    window.addEventListener('user-update', handleStorage);
-    return () => window.removeEventListener('user-update', handleStorage);
+    window.addEventListener('user-update', handleUpdate);
+    return () => window.removeEventListener('user-update', handleUpdate);
   }, []);
 
   const handleUserClick = () => {
@@ -56,27 +59,12 @@ export default function Sidebar() {
       <div className="flex flex-col items-center space-y-6">
         <div className="text-yellow-400 font-bold text-xl mb-2 cursor-pointer" onClick={() => router.push('/')}>T</div>
 
-        <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer group" onClick={() => alert('灵感功能开发中')}>
-          <LightBulbIcon className="h-6 w-6" />
-          <span className="text-[10px]">灵感</span>
-        </div>
-
-        <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer group" onClick={() => alert('反推功能开发中')}>
-          <SparklesIcon className="h-6 w-6" />
-          <span className="text-[10px]">反推</span>
-        </div>
-
         <div
           className={`flex flex-col items-center space-y-1 cursor-pointer group ${isActive('/') ? 'text-yellow-400' : 'hover:text-white'}`}
           onClick={() => router.push('/')}
         >
           <PhotoIcon className="h-6 w-6" />
           <span className="text-[10px]">绘图</span>
-        </div>
-
-        <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer group" onClick={() => alert('视频生成即将上线')}>
-          <VideoCameraIcon className="h-6 w-6" />
-          <span className="text-[10px]">视频</span>
         </div>
 
         <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer group" onClick={() => router.push('/profile')}>
@@ -109,11 +97,6 @@ export default function Sidebar() {
         <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer" onClick={() => router.push('/pricing')}>
           <BoltIcon className="h-5 w-5 text-yellow-500" />
           <span className="text-[10px] text-yellow-500">充值</span>
-        </div>
-
-         <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer" onClick={() => alert('返现活动敬请期待')}>
-          <CurrencyYenIcon className="h-5 w-5" />
-          <span className="text-[10px]">返现</span>
         </div>
 
         <div className="flex flex-col items-center space-y-1 hover:text-white cursor-pointer" onClick={() => window.open('https://github.com/QuantumNous/new-api', '_blank')}>

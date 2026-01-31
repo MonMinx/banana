@@ -8,51 +8,83 @@ export default function PricingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const u = localStorage.getItem('user');
-    if (u && u !== 'undefined') {
-        try {
-            setUser(JSON.parse(u));
-        } catch (e) { console.error(e); }
-    }
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+          if (data.user) setUser(data.user);
+      })
+      .catch(e => console.error(e));
   }, []);
 
-  const handlePurchase = async (amount: number, credits: number) => {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<any>(null);
+  const [processing, setProcessing] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
-    if (!confirm(`确认支付 $${amount} 购买 ${credits} 积分?`)) return;
+  const initiatePurchase = async (tier: any) => {
+      if (!user) {
+          router.push('/login');
+          return;
+      }
 
+      try {
+        // Create Pending Order immediately
+        const res = await fetch('/api/payment/wechat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.id,
+              amount: tier.price,
+              credits: tier.credits
+            })
+        });
+        const data = await res.json();
+        if (data.pay_info && data.pay_info.orderId) {
+            setCurrentOrderId(data.pay_info.orderId);
+            setSelectedTier(tier);
+            setShowModal(true);
+        } else {
+            alert('创建订单失败');
+        }
+      } catch(e) {
+        console.error(e);
+        alert('网络错误');
+      }
+  };
+
+  const confirmPurchase = async () => {
+    if (!selectedTier || !user || !currentOrderId) return;
+    setProcessing(true);
+
+    // Verify Payment (Completes transaction & adds credits)
     try {
-      const res = await fetch('/api/payment', {
+      const res = await fetch('/api/payment/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          amount,
-          credits
-        })
+        body: JSON.stringify({ orderId: currentOrderId })
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         alert('支付成功! 积分已到账。');
-        // Update user credits
-        fetch(`/api/user?userId=${user.id}`)
+        setShowModal(false);
+        setProcessing(false);
+
+        // Refresh user
+        window.dispatchEvent(new Event('user-update'));
+        fetch('/api/auth/me')
           .then(r => r.json())
           .then(d => {
-             if(d.user) {
-                 localStorage.setItem('user', JSON.stringify(d.user));
-                 window.dispatchEvent(new Event('user-update'));
-                 setUser(d.user);
-             }
+              if(d.user) setUser(d.user);
           });
       } else {
-        alert('支付失败。');
+        alert('支付验证失败或超时');
+        setProcessing(false);
       }
     } catch (e) {
       console.error(e);
-      alert('支付处理错误');
+      setProcessing(false);
     }
   };
 
@@ -92,7 +124,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <button
-                  onClick={() => handlePurchase(tier.price, tier.credits)}
+                  onClick={() => initiatePurchase(tier)}
                   className="w-full bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-bold py-3 px-4 rounded-lg transition border border-gray-700 hover:border-yellow-500"
                 >
                   选择 {tier.name}
@@ -101,6 +133,41 @@ export default function PricingPage() {
             ))}
           </div>
         </div>
+
+        {/* Payment Modal */}
+        {showModal && selectedTier && (
+            <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                <div className="bg-[#1a1a1a] border border-gray-700 rounded-xl p-8 max-w-sm w-full text-center relative">
+                    <button
+                        onClick={() => setShowModal(false)}
+                        className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                    >
+                        ✕
+                    </button>
+
+                    <h3 className="text-xl font-bold mb-4">微信支付</h3>
+                    <p className="text-gray-400 mb-6">扫码支付 <span className="text-yellow-400 text-lg font-bold">${selectedTier.price}</span></p>
+
+                    <div className="bg-white p-4 rounded-lg inline-block mb-6">
+                        {/* Mock QR Code */}
+                        <div className="w-48 h-48 bg-gray-200 flex items-center justify-center text-black text-xs">
+                            [模拟二维码]<br/>
+                            请点击下方按钮<br/>
+                            模拟支付完成
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={confirmPurchase}
+                        disabled={processing}
+                        className="w-full bg-[#07C160] hover:bg-[#06ad56] text-white font-bold py-3 rounded transition flex items-center justify-center gap-2"
+                    >
+                        {processing ? '支付处理中...' : '模拟已支付'}
+                    </button>
+                </div>
+            </div>
+        )}
+
       </main>
     </div>
   );

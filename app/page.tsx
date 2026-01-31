@@ -15,15 +15,13 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('AI绘图');
 
   useEffect(() => {
-    // Check for stored user
-    const u = localStorage.getItem('user');
-    if (u && u !== 'undefined') {
-        try {
-            setUser(JSON.parse(u));
-        } catch(e) {
-            console.error("Failed to parse user", e);
-        }
-    }
+    // Check for user session
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+          if (data.user) setUser(data.user);
+      })
+      .catch(e => console.error(e));
   }, []);
 
   const handleGenerate = async () => {
@@ -56,11 +54,10 @@ export default function Home() {
         setResults([data.imageUrl, ...results]);
 
         // Refresh credits
-        fetch(`/api/user?userId=${user.id}`)
+        fetch('/api/auth/me')
              .then(r => r.json())
              .then(d => {
                 if(d.user) {
-                    localStorage.setItem('user', JSON.stringify(d.user));
                     setUser(d.user);
                     window.dispatchEvent(new Event('user-update'));
                 }
@@ -98,7 +95,7 @@ export default function Home() {
       <div className="flex-1 flex flex-col bg-black">
         {/* Top Tabs */}
         <div className="flex items-center gap-4 px-6 py-4 border-b border-gray-900 bg-black z-10">
-          {['全部', 'AI绘图', 'AI视频', '收藏'].map(tab => (
+          {['全部', 'AI绘图', '收藏'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
