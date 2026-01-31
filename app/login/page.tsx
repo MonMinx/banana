@@ -74,10 +74,23 @@ export default function LoginPage() {
           >
             {loading ? '登录中...' : '登录 / 注册'}
           </button>
+
+          <div className="relative flex py-2 items-center">
+             <div className="flex-grow border-t border-gray-700"></div>
+             <span className="flex-shrink mx-4 text-gray-400 text-xs">或者</span>
+             <div className="flex-grow border-t border-gray-700"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => window.location.href = '/api/auth/wechat/login'}
+            className="w-full bg-[#07C160] hover:bg-[#06ad56] text-white font-bold py-2 px-4 rounded transition flex items-center justify-center gap-2"
+          >
+             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.697 15.636c0 .412-.338.745-.757.745-.42 0-.758-.333-.758-.745 0-.412.338-.745.758-.745.419 0 .757.333.757.745zm4.849 0c0 .412-.338.745-.758.745-.42 0-.758-.333-.758-.745 0-.412.338-.745.758-.745.42 0 .758.333.758.745zm-1.455 3.333c5.03 0 9.09-3.212 9.09-7.272 0-4.06-4.06-7.273-9.09-7.273-5.03 0-9.091 3.212-9.091 7.273 0 2.242 1.212 4.182 3.152 5.515l-.788 2.364 2.848-1.455c1.152.485 2.516.848 3.788.848z"/></svg>
+             微信快捷登录
+          </button>
+
         </form>
-        <p className="mt-4 text-center text-sm text-gray-500">
-          (这是一个演示登录，请输入任意邮箱)
-        </p>
       </div>
     </div>
   );

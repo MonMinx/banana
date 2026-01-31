@@ -1,12 +1,22 @@
 import { prisma } from '@/app/lib/prisma';
 import { NextResponse } from 'next/server';
+import { getUserFromRequest, unauthorizedResponse } from '@/app/lib/auth';
 
 export async function GET(request: Request) {
+  const authUser = getUserFromRequest(request);
+  if (!authUser) return unauthorizedResponse();
+
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get('userId');
 
   if (!userId) {
-    return NextResponse.json({ error: 'User ID required' }, { status: 401 });
+    return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+  }
+
+  // Authorization Check: prevent IDOR
+  // User can only access their own profile, unless they are admin
+  if (authUser.id !== parseInt(userId) && authUser.role !== 'admin') {
+      return unauthorizedResponse();
   }
 
   try {

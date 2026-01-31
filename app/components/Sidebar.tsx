@@ -9,7 +9,8 @@ import {
   CurrencyYenIcon,
   QuestionMarkCircleIcon,
   ShieldCheckIcon,
-  BoltIcon
+  BoltIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -82,6 +83,13 @@ export default function Sidebar() {
           <CubeIcon className="h-6 w-6" />
           <span className="text-[10px]">资产</span>
         </div>
+
+        {user && user.role === 'admin' && (
+             <div className="flex flex-col items-center space-y-1 text-red-400 hover:text-red-300 cursor-pointer group" onClick={() => router.push('/admin/users')}>
+                <Cog6ToothIcon className="h-6 w-6" />
+                <span className="text-[10px]">管理</span>
+             </div>
+        )}
       </div>
 
       <div className="flex flex-col items-center space-y-6">

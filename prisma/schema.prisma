@@ -8,14 +8,18 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String?  @unique
-  wechatId  String?  @unique
-  password  String?
-  credits   Int      @default(0)
-  role      String   @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  email        String?  @unique
+  password     String?
+  credits      Int      @default(0)
+  role         String   @default("user") // 'user', 'admin'
+
+  // WeChat Fields
+  wechatOpenId String?  @unique
+  unionId      String?  @unique
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   transactions Transaction[]
   generations  Generation[]

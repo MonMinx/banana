@@ -1,5 +1,6 @@
 import { prisma } from '@/app/lib/prisma';
 import { NextResponse } from 'next/server';
+import { getUserFromRequest, unauthorizedResponse } from '@/app/lib/auth';
 
 const API_HOST = 'https://grsaiapi.com';
 
@@ -21,10 +22,19 @@ function getDimensions(ratio: string): { width: number, height: number } {
 export async function POST(request: Request) {
   const API_KEY = process.env.NANO_API_KEY;
   try {
+    // Verify JWT
+    const authUser = getUserFromRequest(request);
+    if (!authUser) return unauthorizedResponse();
+
     const { userId, prompt, imageBase64, aspectRatio } = await request.json();
 
     if (!userId || !prompt) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Ensure authorized
+    if (authUser.id !== parseInt(userId) && authUser.role !== 'admin') {
+         return unauthorizedResponse();
     }
 
     // 1. Check User Credits
