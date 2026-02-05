@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String?  @unique
+  password     String?
+  credits      Int      @default(0)
+  role         String   @default("user") // 'user', 'admin'
+
+  // WeChat Fields
+  wechatOpenId String?  @unique
+  unionId      String?  @unique
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  transactions Transaction[]
+  generations  Generation[]
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Float
+  credits   Int
+  type      String
+  status    String
+  orderId   String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Generation {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  prompt    String
+  imageUrl  String?
+  status    String
+  cost      Int
+  createdAt DateTime @default(now())
+}
